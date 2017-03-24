@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { initializeApp, database } from 'firebase';
+import {AngularFire} from "angularfire2/angularfire2";
+import {FirebaseListObservable} from "angularfire2/database/firebase_list_observable";
 
 @Component({
   selector: 'app-root',
@@ -9,22 +11,12 @@ import { initializeApp, database } from 'firebase';
 export class AppComponent {
   title = 'app works!';
 
-  constructor(){
+  constructor(private af: AngularFire){
 
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyChfbiTaN7deX4Dyiggzv3vbq4LHqU50kw",
-      authDomain: "fir-crud-f765e.firebaseapp.com",
-      databaseURL: "https://fir-crud-f765e.firebaseio.com",
-      storageBucket: "fir-crud-f765e.appspot.com",
-      messagingSenderId: "450788208288"
-    };
-    initializeApp(config);
-
-     var root = database().ref();
-     root.on('value', function(snap){
-       console.log(snap.val());
-     })
+    const messages$ : FirebaseListObservable<any> = af.database.list('messages');
+    messages$.subscribe(
+      val => console.log(val)
+    );
 
   }
 }
